@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.avegao.iot.openevse";
+option java_outer_classname = "IotOpenevseProto";
+option objc_class_prefix = "RTG";
+
+package iot_openevse_service;
+
+service Openevse {
+    rpc GetAmmeterSettings (GetRequest) returns (GetAmmeterSettingsResponse);
+    rpc GetAuthLockState (GetRequest) returns (GetAuthLockStateResponse);
+    rpc GetChargeLimit (GetRequest) returns (GetChargeLimitResponse);
+    rpc GetCurrentCapacityRangeInAmps (GetRequest) returns (GetCurrentCapacityRangeInAmpsResponse);
+    rpc GetDelayTimer (GetRequest) returns (GetDelayTimerResponse);
+    rpc GetEnergyUsage (GetRequest) returns (GetEnergyUsageResponse);
+    rpc GetEvConnectState (GetRequest) returns (GetEvConnectStateResponse);
+    rpc GetFaultCounters (GetRequest) returns (GetFaultCountersResponse);
+    rpc GetOverTemperatureThresholds (GetRequest) returns (GetOverTemperatureThresholdsResponse);
+    rpc GetRtcTime (GetRequest) returns (GetRtcTimeResponse);
+    rpc GetSettings (GetRequest) returns (GetSettingsResponse);
+    rpc GetTimeLimit (GetRequest) returns (GetTimeLimitResponse);
+    rpc GetVersion (GetRequest) returns (GetVersionResponse);
+    rpc GetVoltmeterSettings (GetRequest) returns (GetVoltmeterSettingsResponse);
+    rpc SetRtcTime (SetRtcTimeRequest) returns (SetResponse);
+}
+
+enum EvConnectState {
+    NOT_CONNECTED = 0;
+    CONNECTED = 1;
+    UNKNOWN = 2;
+}
+
+message GetRequest {
+    string host = 1;
+}
+
+message GetAmmeterSettingsResponse {
+    int32 currentScaleFactor = 1;
+    int32 currentOffset = 2;
+}
+
+message GetAuthLockStateResponse {
+    bool locked = 1;
+}
+
+message GetChargeLimitResponse {
+    int32 milliAmps = 1;
+    int32 milliVolts = 2;
+}
+
+message GetCurrentCapacityRangeInAmpsResponse {
+    int32 minAmps = 1;
+    int32 maxAmps = 2;
+}
+
+message GetDelayTimerResponse {
+    string startTime = 1;
+    string endTime = 2;
+}
+
+message GetEnergyUsageResponse {
+    int32 whInSession = 1;
+    int32 whAccumulated = 2;
+}
+
+message GetEvConnectStateResponse {
+    EvConnectState state = 1;
+}
+
+message GetFaultCountersResponse {
+    int32 gfdi = 1;
+    int32 noGround = 2;
+    int32 stuckRelay = 3;
+}
+
+message GetOverTemperatureThresholdsResponse {
+    float ambient = 1;
+    float ir = 2;
+}
+
+message GetRtcTimeResponse {
+    string rtcTime = 1;
+}
+
+message GetSettingsResponse {
+    int32 amperes = 1;
+    repeated string flags = 2;
+}
+
+message GetTimeLimitResponse {
+    int32 limit = 1;
+}
+
+message GetVersionResponse {
+    string firmwareVersion = 1;
+    string protocolVersion = 2;
+}
+
+message GetVoltmeterSettingsResponse {
+    int32 calefactor = 1;
+    int32 offset = 2;
+}
+
+message SetResponse {
+    bool ok = 1;
+}
+
+message SetRtcTimeRequest {
+    string host = 1;
+    string rtcTime = 2;
+}
