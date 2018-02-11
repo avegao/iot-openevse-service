@@ -2,3 +2,8 @@ package: github.com/avegao/iot-openevse-service
 import:
 - package: github.com/avegao/openevse
   version: ^0.3.0
+- package: github.com/avegao/gocondi
+  version: 0.5.2
+- package: github.com/heroku/rollrus
+- package: google.golang.org/grpc
+  version: ^1.9.2
