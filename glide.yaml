@@ -1,0 +1,4 @@
+package: github.com/avegao/iot-openevse-service
+import:
+- package: github.com/avegao/openevse
+  version: ^0.3.0
