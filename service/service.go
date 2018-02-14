@@ -11,59 +11,59 @@ type OpenevseService struct {
 	pb.OpenevseServer
 }
 
-func (s OpenevseService) GetAmmeterSettings(context.Context, *pb.GetRequest) (*pb.GetAmmeterSettingsResponse, error) {
+func (s OpenevseService) GetAmmeterSettings(ctx context.Context, request *pb.GetRequest) (*pb.GetAmmeterSettingsResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetAuthLockState(context.Context, *pb.GetRequest) (*pb.GetAuthLockStateResponse, error) {
+func (s OpenevseService) GetAuthLockState(ctx context.Context, request *pb.GetRequest) (*pb.GetAuthLockStateResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetChargeLimit(context.Context, *pb.GetRequest) (*pb.GetChargeLimitResponse, error) {
+func (s OpenevseService) GetChargeLimit(ctx context.Context, request *pb.GetRequest) (*pb.GetChargeLimitResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetCurrentCapacityRangeInAmps(context.Context, *pb.GetRequest) (*pb.GetCurrentCapacityRangeInAmpsResponse, error) {
+func (s OpenevseService) GetCurrentCapacityRangeInAmps(ctx context.Context, request *pb.GetRequest) (*pb.GetCurrentCapacityRangeInAmpsResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetDelayTimer(context.Context, *pb.GetRequest) (*pb.GetDelayTimerResponse, error) {
+func (s OpenevseService) GetDelayTimer(ctx context.Context, request *pb.GetRequest) (*pb.GetDelayTimerResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetEnergyUsage(context.Context, *pb.GetRequest) (*pb.GetEnergyUsageResponse, error) {
+func (s OpenevseService) GetEnergyUsage(ctx context.Context, request *pb.GetRequest) (*pb.GetEnergyUsageResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetEvConnectState(context.Context, *pb.GetRequest) (*pb.GetEvConnectStateResponse, error) {
+func (s OpenevseService) GetEvConnectState(ctx context.Context, request *pb.GetRequest) (*pb.GetEvConnectStateResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetFaultCounters(context.Context, *pb.GetRequest) (*pb.GetFaultCountersResponse, error) {
+func (s OpenevseService) GetFaultCounters(ctx context.Context, request *pb.GetRequest) (*pb.GetFaultCountersResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetOverTemperatureThresholds(context.Context, *pb.GetRequest) (*pb.GetOverTemperatureThresholdsResponse, error) {
+func (s OpenevseService) GetOverTemperatureThresholds(ctx context.Context, request *pb.GetRequest) (*pb.GetOverTemperatureThresholdsResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetRtcTime(context.Context, *pb.GetRequest) (*pb.GetRtcTimeResponse, error) {
+func (s OpenevseService) GetRtcTime(ctx context.Context, request *pb.GetRequest) (*pb.GetRtcTimeResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetSettings(context.Context, *pb.GetRequest) (*pb.GetSettingsResponse, error) {
+func (s OpenevseService) GetSettings(ctx context.Context, request *pb.GetRequest) (*pb.GetSettingsResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetTimeLimit(context.Context, *pb.GetRequest) (*pb.GetTimeLimitResponse, error) {
+func (s OpenevseService) GetTimeLimit(ctx context.Context, request *pb.GetRequest) (*pb.GetTimeLimitResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetVersion(context.Context, *pb.GetRequest) (*pb.GetVersionResponse, error) {
+func (s OpenevseService) GetVersion(ctx context.Context, request *pb.GetRequest) (*pb.GetVersionResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) GetVoltmeterSettings(context.Context, *pb.GetRequest) (*pb.GetVoltmeterSettingsResponse, error) {
+func (s OpenevseService) GetVoltmeterSettings(ctx context.Context, request *pb.GetRequest) (*pb.GetVoltmeterSettingsResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
