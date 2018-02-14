@@ -5,6 +5,9 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/grpc/codes"
 	"context"
+	"github.com/avegao/openevse"
+	"time"
+	"github.com/avegao/gocondi"
 )
 
 type OpenevseService struct {
@@ -48,7 +51,27 @@ func (s OpenevseService) GetOverTemperatureThresholds(ctx context.Context, reque
 }
 
 func (s OpenevseService) GetRtcTime(ctx context.Context, request *pb.GetRequest) (*pb.GetRtcTimeResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetRtcTime"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.Debugf("%s - START", logTag)
+
+	rtcTime, err := openevse.GetRtcTime(request.GetHost())
+
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetRtcTimeResponse{
+		RtcTime: rtcTime.Format(time.RFC3339),
+	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
+	return response, nil
 }
 
 func (s OpenevseService) GetSettings(ctx context.Context, request *pb.GetRequest) (*pb.GetSettingsResponse, error) {
@@ -70,4 +93,3 @@ func (s OpenevseService) GetVoltmeterSettings(ctx context.Context, request *pb.G
 func (s OpenevseService) SetRtcTime(context.Context, *pb.SetRtcTimeRequest) (*pb.SetResponse, error) {
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
-

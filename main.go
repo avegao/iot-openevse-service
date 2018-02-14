@@ -32,10 +32,10 @@ func initContainer() {
 	flag.Parse()
 
 	parameters = map[string]interface{}{
-		"build_date":              buildDate,
-		"debug":                   *debug,
-		"commit_hash":             commitHash,
-		"version":                 version,
+		"build_date":  buildDate,
+		"debug":       *debug,
+		"commit_hash": commitHash,
+		"version":     version,
 	}
 
 	logger := initLogger()
