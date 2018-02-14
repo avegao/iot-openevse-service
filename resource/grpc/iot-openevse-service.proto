@@ -25,12 +25,6 @@ service Openevse {
     rpc SetRtcTime (SetRtcTimeRequest) returns (SetResponse);
 }
 
-enum EvConnectState {
-    NOT_CONNECTED = 0;
-    CONNECTED = 1;
-    UNKNOWN = 2;
-}
-
 message GetRequest {
     string host = 1;
 }
@@ -65,6 +59,12 @@ message GetEnergyUsageResponse {
 }
 
 message GetEvConnectStateResponse {
+    enum EvConnectState {
+        NOT_CONNECTED = 0;
+        CONNECTED = 1;
+        UNKNOWN = 2;
+    }
+
     EvConnectState state = 1;
 }
 

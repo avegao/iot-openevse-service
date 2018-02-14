@@ -1,10 +1,19 @@
 hash: 55cfb82d6a175bb481b8cadbecd7660e122a22cb3dff8751994406f549c5c2e3
-updated: 2018-02-11T20:58:43.345876+01:00
+updated: 2018-02-11T21:18:58.06762+01:00
 imports:
 - name: github.com/avegao/gocondi
   version: d92d24381af59fb669232b3741c8ff1116d27de4
 - name: github.com/avegao/openevse
   version: 7c67218bb4781ad57db151aaed1b3c6c29f89603
+- name: github.com/golang/protobuf
+  version: bbd03ef6da3a115852eaf24c8a1c46aeb39aa175
+  subpackages:
+  - proto
+  - protoc-gen-go/descriptor
+  - ptypes
+  - ptypes/any
+  - ptypes/duration
+  - ptypes/timestamp
 - name: github.com/heroku/rollrus
   version: 8c4f823801514d40d7c7d6cfa13320af0a091611
 - name: github.com/pkg/errors
@@ -17,11 +26,56 @@ imports:
   version: 5119cf507ed5294cc409c092980c7497ee5d6fd2
   subpackages:
   - ssh/terminal
+- name: golang.org/x/net
+  version: f5dfe339be1d06f81b22525fe34671ee7d2c8904
+  subpackages:
+  - context
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - lex/httplex
+  - trace
 - name: golang.org/x/sys
   version: 37707fdb30a5b38865cfb95e5aab41707daec7fd
   subpackages:
   - unix
   - windows
+- name: golang.org/x/text
+  version: 4e4a3210bb54bb31f6ab2cdca2edcc0b50c420c1
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/genproto
+  version: 2b5a72b8730b0b16380010cfe5286c42108d88e7
+  subpackages:
+  - googleapis/rpc/status
 - name: google.golang.org/grpc
   version: 6b51017f791ae1cfbec89c52efdf444b13b550ef
+  subpackages:
+  - balancer
+  - balancer/base
+  - balancer/roundrobin
+  - codes
+  - connectivity
+  - credentials
+  - encoding
+  - grpclb/grpc_lb_v1/messages
+  - grpclog
+  - internal
+  - keepalive
+  - metadata
+  - naming
+  - peer
+  - reflection
+  - reflection/grpc_reflection_v1alpha
+  - resolver
+  - resolver/dns
+  - resolver/passthrough
+  - stats
+  - status
+  - tap
+  - transport
 testImports: []
