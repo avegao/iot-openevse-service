@@ -55,7 +55,7 @@ func (s OpenevseService) GetRtcTime(ctx context.Context, request *pb.GetRequest)
 
 	container := gocondi.GetContainer()
 	logger := container.GetLogger()
-	logger.Debugf("%s - START", logTag)
+	logger.WithField("request", request).Debugf("%s - START", logTag)
 
 	rtcTime, err := openevse.GetRtcTime(request.GetHost())
 
@@ -90,6 +90,29 @@ func (s OpenevseService) GetVoltmeterSettings(ctx context.Context, request *pb.G
 	return nil, status.New(codes.Unimplemented, "").Err()
 }
 
-func (s OpenevseService) SetRtcTime(context.Context, *pb.SetRtcTimeRequest) (*pb.SetResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+func (s OpenevseService) SetRtcTime(ctx context.Context, request *pb.SetRtcTimeRequest) (*pb.SetResponse, error) {
+	const logTag = "OpenevseService.SetRtcTime"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	rtcTime, err := time.Parse(time.RFC3339, request.GetRtcTime())
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	if err := openevse.SetRtcTime(request.GetHost(), rtcTime); err != nil {
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.SetResponse{
+		Ok: true,
+	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
+	return response, nil
 }
