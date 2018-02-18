@@ -8,6 +8,9 @@ import (
 	"github.com/avegao/openevse"
 	"time"
 	"github.com/avegao/gocondi"
+	"github.com/avegao/openevse/command/ev_connect_state"
+	"github.com/avegao/iot-openevse-service/entity/charger"
+	"github.com/pkg/errors"
 )
 
 type OpenevseService struct {
@@ -39,7 +42,39 @@ func (s OpenevseService) GetEnergyUsage(ctx context.Context, request *pb.GetRequ
 }
 
 func (s OpenevseService) GetEvConnectState(ctx context.Context, request *pb.GetRequest) (*pb.GetEvConnectStateResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetEvConnectState"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	state, err := openevse.GetEvConnectState(c.Host)
+
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetEvConnectStateResponse{
+		State: evStateToGrpc(state),
+	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
+	return response, nil
 }
 
 func (s OpenevseService) GetFaultCounters(ctx context.Context, request *pb.GetRequest) (*pb.GetFaultCountersResponse, error) {
@@ -57,7 +92,19 @@ func (s OpenevseService) GetRtcTime(ctx context.Context, request *pb.GetRequest)
 	logger := container.GetLogger()
 	logger.WithField("request", request).Debugf("%s - START", logTag)
 
-	rtcTime, err := openevse.GetRtcTime(request.GetHost())
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	rtcTime, err := openevse.GetRtcTime(c.Host)
 
 	if err != nil {
 		logger.WithError(err).Errorf("%s - END", logTag)
@@ -104,7 +151,19 @@ func (s OpenevseService) SetRtcTime(ctx context.Context, request *pb.SetRtcTimeR
 		return nil, status.New(codes.Internal, err.Error()).Err()
 	}
 
-	if err := openevse.SetRtcTime(request.GetHost(), rtcTime); err != nil {
+	c, err := charger.FindOneById(request.Id)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	if err := openevse.SetRtcTime(c.Host, rtcTime); err != nil {
 		return nil, status.New(codes.Internal, err.Error()).Err()
 	}
 
@@ -115,4 +174,12 @@ func (s OpenevseService) SetRtcTime(ctx context.Context, request *pb.SetRtcTimeR
 	logger.WithField("response", response).Debugf("%s - END", logTag)
 
 	return response, nil
+}
+
+func evStateToGrpc(state evConnectState.EvConnectState) (grpcState pb.GetEvConnectStateResponse_EvConnectState) {
+	return pb.GetEvConnectStateResponse_EvConnectState(pb.GetEvConnectStateResponse_EvConnectState_value[state.String()])
+}
+
+func getChargerFromGetRequest(request *pb.GetRequest) (*charger.Charger, error) {
+	return charger.FindOneById(request.GetId())
 }

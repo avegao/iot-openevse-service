@@ -26,7 +26,7 @@ service Openevse {
 }
 
 message GetRequest {
-    string host = 1;
+    uint64 id = 1;
 }
 
 message GetAmmeterSettingsResponse {
@@ -107,6 +107,6 @@ message SetResponse {
 }
 
 message SetRtcTimeRequest {
-    string host = 1;
+    uint64 id = 1;
     string rtcTime = 2;
 }

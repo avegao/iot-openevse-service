@@ -1,10 +1,30 @@
-hash: 55cfb82d6a175bb481b8cadbecd7660e122a22cb3dff8751994406f549c5c2e3
-updated: 2018-02-11T21:18:58.06762+01:00
+hash: d2951da12662d4d7298f9ae7a678347af3fb0ce285d815e2ec29b9fb31a85bcb
+updated: 2018-02-15T22:02:45.677839+01:00
 imports:
 - name: github.com/avegao/gocondi
   version: d92d24381af59fb669232b3741c8ff1116d27de4
 - name: github.com/avegao/openevse
   version: 7c67218bb4781ad57db151aaed1b3c6c29f89603
+  subpackages:
+  - command
+  - command/ev_connect_state
+  - command/get/ammeter/settings
+  - command/get/auth_lock_state
+  - command/get/charge_limit
+  - command/get/charging_current_and_voltage
+  - command/get/current_capacity_range_in_amps
+  - command/get/delay_timer
+  - command/get/energy_usage
+  - command/get/ev_connect_state
+  - command/get/fault_counters
+  - command/get/over_temperature_thresholds
+  - command/get/rtc_time
+  - command/get/settings
+  - command/get/time_limit
+  - command/get/version
+  - command/get/voltmeter_settings
+  - command/set/rtc_time
+  - util
 - name: github.com/golang/protobuf
   version: bbd03ef6da3a115852eaf24c8a1c46aeb39aa175
   subpackages:
@@ -16,6 +36,8 @@ imports:
   - ptypes/timestamp
 - name: github.com/heroku/rollrus
   version: 8c4f823801514d40d7c7d6cfa13320af0a091611
+- name: github.com/lib/pq
+  version: 88edab0803230a3898347e77b474f8c1820a1f20
 - name: github.com/pkg/errors
   version: 30136e27e2ac8d167177e8a583aa4c3fea5be833
 - name: github.com/sirupsen/logrus
@@ -23,7 +45,7 @@ imports:
 - name: github.com/stvp/roll
   version: 3627a5cbeaeaa68023abd02bb8687925265f2f63
 - name: golang.org/x/crypto
-  version: 5119cf507ed5294cc409c092980c7497ee5d6fd2
+  version: 650f4a345ab4e5b245a3034b110ebc7299e68186
   subpackages:
   - ssh/terminal
 - name: golang.org/x/net
@@ -78,4 +100,9 @@ imports:
   - status
   - tap
   - transport
-testImports: []
+testImports:
+- name: github.com/golang/mock
+  version: 13f360950a79f5864a972c786a10a50e44b69541
+  subpackages:
+  - gomock
+  - mockgen

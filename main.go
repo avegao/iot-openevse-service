@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/reflection"
 	pb "github.com/avegao/iot-openevse-service/resource/grpc"
 	"github.com/avegao/iot-openevse-service/service"
+	_ "github.com/lib/pq"
 )
 
 const version = "1.0.0"
