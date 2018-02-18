@@ -18,7 +18,37 @@ type OpenevseService struct {
 }
 
 func (s OpenevseService) GetAmmeterSettings(ctx context.Context, request *pb.GetRequest) (*pb.GetAmmeterSettingsResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetAmmeterSettings"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	currentScaleFactor, currentOffset, err := openevse.GetAmmeterSettings(c.Host)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetAmmeterSettingsResponse{
+		CurrentScaleFactor: int32(currentScaleFactor),
+		CurrentOffset: int32(currentOffset),
+	}
+
+	return response, nil
 }
 
 func (s OpenevseService) GetAuthLockState(ctx context.Context, request *pb.GetRequest) (*pb.GetAuthLockStateResponse, error) {
