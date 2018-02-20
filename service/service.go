@@ -175,7 +175,7 @@ func (s OpenevseService) GetEnergyUsage(ctx context.Context, request *pb.GetRequ
 		return nil, status.New(codes.NotFound, err.Error()).Err()
 	}
 
-	whInSession, whAccumulated, err := openevse.GetEnergyUsage(c.Host)
+	whInSession, kwhAccumulated, err := openevse.GetEnergyUsage(c.Host)
 	if err != nil {
 		logger.WithError(err).Errorf("%s - END", logTag)
 
@@ -183,9 +183,11 @@ func (s OpenevseService) GetEnergyUsage(ctx context.Context, request *pb.GetRequ
 	}
 
 	response := &pb.GetEnergyUsageResponse{
-		WhInSession:   int32(whInSession),
-		WhAccumulated: int32(whAccumulated),
+		WhInSession:    whInSession,
+		KwhAccumulated: kwhAccumulated,
 	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
 
 	return response, nil
 }

@@ -53,8 +53,8 @@ message GetDelayTimerResponse {
 }
 
 message GetEnergyUsageResponse {
-    int32 whInSession = 1;
-    int32 whAccumulated = 2;
+    float whInSession = 1;
+    float kwhAccumulated = 2;
 }
 
 message GetEvConnectStateResponse {
