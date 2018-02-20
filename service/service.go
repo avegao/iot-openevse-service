@@ -227,7 +227,38 @@ func (s OpenevseService) GetEvConnectState(ctx context.Context, request *pb.GetR
 }
 
 func (s OpenevseService) GetFaultCounters(ctx context.Context, request *pb.GetRequest) (*pb.GetFaultCountersResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetFaultCounters"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	gfdi, noGround, stuckRelay, err := openevse.GetFaultCounters(c.Host)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetFaultCountersResponse{
+		Gfdi:       int32(gfdi),
+		NoGround:   int32(noGround),
+		StuckRelay: int32(stuckRelay),
+	}
+
+	return response, nil
 }
 
 func (s OpenevseService) GetOverTemperatureThresholds(ctx context.Context, request *pb.GetRequest) (*pb.GetOverTemperatureThresholdsResponse, error) {
