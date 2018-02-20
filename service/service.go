@@ -48,6 +48,8 @@ func (s OpenevseService) GetAmmeterSettings(ctx context.Context, request *pb.Get
 		CurrentOffset:      int32(currentOffset),
 	}
 
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
 	return response, nil
 }
 
@@ -85,6 +87,8 @@ func (s OpenevseService) GetChargeLimit(ctx context.Context, request *pb.GetRequ
 		Kwh: int32(kwh),
 	}
 
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
 	return response, nil
 }
 
@@ -119,6 +123,8 @@ func (s OpenevseService) GetCurrentCapacityRangeInAmps(ctx context.Context, requ
 		MinAmps: int32(minAmps),
 	}
 
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
 	return response, nil
 }
 
@@ -152,6 +158,8 @@ func (s OpenevseService) GetDelayTimer(ctx context.Context, request *pb.GetReque
 		StartTime: startTime,
 		EndTime:   endTime,
 	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
 
 	return response, nil
 }
@@ -260,6 +268,8 @@ func (s OpenevseService) GetFaultCounters(ctx context.Context, request *pb.GetRe
 		StuckRelay: int32(stuckRelay),
 	}
 
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
 	return response, nil
 }
 
@@ -293,6 +303,8 @@ func (s OpenevseService) GetOverTemperatureThresholds(ctx context.Context, reque
 		Ambient: ambient,
 		Ir:      ir,
 	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
 
 	return response, nil
 }
