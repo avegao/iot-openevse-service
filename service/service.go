@@ -11,6 +11,7 @@ import (
 	"github.com/avegao/openevse/command/ev_connect_state"
 	"github.com/avegao/iot-openevse-service/entity/charger"
 	"github.com/pkg/errors"
+	"fmt"
 )
 
 type OpenevseService struct {
@@ -346,7 +347,39 @@ func (s OpenevseService) GetRtcTime(ctx context.Context, request *pb.GetRequest)
 }
 
 func (s OpenevseService) GetSettings(ctx context.Context, request *pb.GetRequest) (*pb.GetSettingsResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetSettings"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	amperes, flags, err := openevse.GetSettings(c.Host)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetSettingsResponse{
+		Amperes: int32(amperes),
+		Flags:   []string{fmt.Sprintf("%v", flags)},
+	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
+	return response, nil
 }
 
 func (s OpenevseService) GetTimeLimit(ctx context.Context, request *pb.GetRequest) (*pb.GetTimeLimitResponse, error) {
