@@ -123,7 +123,7 @@ func (s OpenevseService) GetCurrentCapacityRangeInAmps(ctx context.Context, requ
 }
 
 func (s OpenevseService) GetDelayTimer(ctx context.Context, request *pb.GetRequest) (*pb.GetDelayTimerResponse, error) {
-	const logTag = "OpenevseService.GetCurrentCapacityRangeInAmps"
+	const logTag = "OpenevseService.GetDelayTimer"
 
 	container := gocondi.GetContainer()
 	logger := container.GetLogger()
@@ -150,14 +150,44 @@ func (s OpenevseService) GetDelayTimer(ctx context.Context, request *pb.GetReque
 
 	response := &pb.GetDelayTimerResponse{
 		StartTime: startTime,
-		EndTime: endTime,
+		EndTime:   endTime,
 	}
 
 	return response, nil
 }
 
 func (s OpenevseService) GetEnergyUsage(ctx context.Context, request *pb.GetRequest) (*pb.GetEnergyUsageResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetEnergyUsage"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	whInSession, whAccumulated, err := openevse.GetEnergyUsage(c.Host)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetEnergyUsageResponse{
+		WhInSession:   int32(whInSession),
+		WhAccumulated: int32(whAccumulated),
+	}
+
+	return response, nil
 }
 
 func (s OpenevseService) GetEvConnectState(ctx context.Context, request *pb.GetRequest) (*pb.GetEvConnectStateResponse, error) {
