@@ -262,7 +262,37 @@ func (s OpenevseService) GetFaultCounters(ctx context.Context, request *pb.GetRe
 }
 
 func (s OpenevseService) GetOverTemperatureThresholds(ctx context.Context, request *pb.GetRequest) (*pb.GetOverTemperatureThresholdsResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetOverTemperatureThresholds"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	ambient, ir, err := openevse.GetOverTemperatureThresholds(c.Host)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetOverTemperatureThresholdsResponse{
+		Ambient: ambient,
+		Ir:      ir,
+	}
+
+	return response, nil
 }
 
 func (s OpenevseService) GetRtcTime(ctx context.Context, request *pb.GetRequest) (*pb.GetRtcTimeResponse, error) {
