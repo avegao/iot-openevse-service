@@ -56,7 +56,36 @@ func (s OpenevseService) GetAuthLockState(ctx context.Context, request *pb.GetRe
 }
 
 func (s OpenevseService) GetChargeLimit(ctx context.Context, request *pb.GetRequest) (*pb.GetChargeLimitResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetChargeLimit"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	kwh, err := openevse.GetChargeLimit(c.Host)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetChargeLimitResponse{
+		Kwh: int32(kwh),
+	}
+
+	return response, nil
 }
 
 func (s OpenevseService) GetCurrentCapacityRangeInAmps(ctx context.Context, request *pb.GetRequest) (*pb.GetCurrentCapacityRangeInAmpsResponse, error) {

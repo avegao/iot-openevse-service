@@ -68,6 +68,6 @@ func FindOneById(id uint64, getDeleted ...bool) (c *Charger, err error) {
 		return
 	}
 
-	logger.WithField("Charger", c).Debugf("%s - END", logTag)
+	logger.WithField("charger", c).Debugf("%s - END", logTag)
 	return
 }

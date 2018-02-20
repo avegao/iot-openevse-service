@@ -39,8 +39,7 @@ message GetAuthLockStateResponse {
 }
 
 message GetChargeLimitResponse {
-    int32 milliAmps = 1;
-    int32 milliVolts = 2;
+    int32 kwh = 1;
 }
 
 message GetCurrentCapacityRangeInAmpsResponse {
