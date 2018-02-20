@@ -45,7 +45,7 @@ func (s OpenevseService) GetAmmeterSettings(ctx context.Context, request *pb.Get
 
 	response := &pb.GetAmmeterSettingsResponse{
 		CurrentScaleFactor: int32(currentScaleFactor),
-		CurrentOffset: int32(currentOffset),
+		CurrentOffset:      int32(currentOffset),
 	}
 
 	return response, nil
@@ -89,7 +89,37 @@ func (s OpenevseService) GetChargeLimit(ctx context.Context, request *pb.GetRequ
 }
 
 func (s OpenevseService) GetCurrentCapacityRangeInAmps(ctx context.Context, request *pb.GetRequest) (*pb.GetCurrentCapacityRangeInAmpsResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetCurrentCapacityRangeInAmps"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	minAmps, maxAmps, err := openevse.GetCurrentCapacityRangeInAmps(c.Host)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetCurrentCapacityRangeInAmpsResponse{
+		MaxAmps: int32(maxAmps),
+		MinAmps: int32(minAmps),
+	}
+
+	return response, nil
 }
 
 func (s OpenevseService) GetDelayTimer(ctx context.Context, request *pb.GetRequest) (*pb.GetDelayTimerResponse, error) {
