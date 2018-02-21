@@ -418,7 +418,39 @@ func (s OpenevseService) GetTimeLimit(ctx context.Context, request *pb.GetReques
 }
 
 func (s OpenevseService) GetVersion(ctx context.Context, request *pb.GetRequest) (*pb.GetVersionResponse, error) {
-	return nil, status.New(codes.Unimplemented, "").Err()
+	const logTag = "OpenevseService.GetVersion"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	firmwareVersion, protocolVersion, err := openevse.GetVersion(c.Host)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	}
+
+	response := &pb.GetVersionResponse{
+		FirmwareVersion: firmwareVersion,
+		ProtocolVersion: protocolVersion,
+	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
+	return response, nil
 }
 
 func (s OpenevseService) GetVoltmeterSettings(ctx context.Context, request *pb.GetRequest) (*pb.GetVoltmeterSettingsResponse, error) {
