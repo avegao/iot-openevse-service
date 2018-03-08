@@ -7,7 +7,11 @@ option objc_class_prefix = "RTG";
 
 package iot_openevse_service;
 
+import "google/protobuf/empty.proto";
+
 service Openevse {
+    rpc FindChargerById (GetRequest) returns (Charger);
+    rpc FindAllChargers (google.protobuf.Empty) returns (FindAllChargersResponse);
     rpc GetAmmeterSettings (GetRequest) returns (GetAmmeterSettingsResponse);
     rpc GetAuthLockState (GetRequest) returns (GetAuthLockStateResponse);
     rpc GetChargeLimit (GetRequest) returns (GetChargeLimitResponse);
@@ -109,3 +113,17 @@ message SetRtcTimeRequest {
     uint64 id = 1;
     string rtcTime = 2;
 }
+
+message Charger {
+    uint64 Id = 1;
+    string name = 2;
+    string host = 3;
+    string createdAt = 4;
+	string updatedAt = 5;
+	string deletedAt = 6;
+}
+
+message FindAllChargersResponse {
+    repeated Charger chargers = 1;
+}
+

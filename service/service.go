@@ -12,10 +12,71 @@ import (
 	"github.com/avegao/iot-openevse-service/entity/charger"
 	"github.com/pkg/errors"
 	"fmt"
+	googleProtobuf "github.com/golang/protobuf/ptypes/empty"
 )
 
 type OpenevseService struct {
 	pb.OpenevseServer
+}
+
+func (s OpenevseService) FindChargerById(ctx context.Context, request *pb.GetRequest) (*pb.Charger, error) {
+	const logTag = "OpenevseService.FindChargerById"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	c, err := getChargerFromGetRequest(request)
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if c == nil {
+		err = errors.New("charger not found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	response := c.ToGrpcResponse()
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
+	return response, nil
+}
+
+func (s OpenevseService) FindAllChargers(ctx context.Context, request *googleProtobuf.Empty) (*pb.FindAllChargersResponse, error) {
+	const logTag = "OpenevseService.FindAllChargers"
+
+	container := gocondi.GetContainer()
+	logger := container.GetLogger()
+	logger.WithField("request", request).Debugf("%s - START", logTag)
+
+	chargers, err := charger.FindAll()
+	if err != nil {
+		logger.WithError(err).Errorf("%s - END", logTag)
+
+		return nil, status.New(codes.Internal, err.Error()).Err()
+	} else if len(chargers) == 0 {
+		err = errors.New("no chargers found")
+		logger.WithError(err).Debugf("%s - END", logTag)
+
+		return nil, status.New(codes.NotFound, err.Error()).Err()
+	}
+
+	var grpcChargers []*pb.Charger
+
+	for _, c := range chargers {
+		grpcChargers = append(grpcChargers, c.ToGrpcResponse())
+	}
+
+	response := &pb.FindAllChargersResponse{
+		Chargers: grpcChargers,
+	}
+
+	logger.WithField("response", response).Debugf("%s - END", logTag)
+
+	return response, nil
 }
 
 func (s OpenevseService) GetAmmeterSettings(ctx context.Context, request *pb.GetRequest) (*pb.GetAmmeterSettingsResponse, error) {

@@ -1,5 +1,5 @@
-hash: d2951da12662d4d7298f9ae7a678347af3fb0ce285d815e2ec29b9fb31a85bcb
-updated: 2018-02-21T19:21:31.269264+01:00
+hash: dec1771fc833a2f5c47b5ea89a52f610f0ca366ab0590fc4351563b3fe01ca04
+updated: 2018-02-26T19:45:54.858209+01:00
 imports:
 - name: github.com/avegao/gocondi
   version: d92d24381af59fb669232b3741c8ff1116d27de4
@@ -26,13 +26,14 @@ imports:
   - command/set/rtc_time
   - util
 - name: github.com/golang/protobuf
-  version: bbd03ef6da3a115852eaf24c8a1c46aeb39aa175
+  version: 925541529c1fa6821df4e44ce2723319eb2be768
   subpackages:
   - proto
   - protoc-gen-go/descriptor
   - ptypes
   - ptypes/any
   - ptypes/duration
+  - ptypes/empty
   - ptypes/timestamp
 - name: github.com/heroku/rollrus
   version: 8c4f823801514d40d7c7d6cfa13320af0a091611
@@ -47,7 +48,7 @@ imports:
 - name: github.com/stvp/roll
   version: 3627a5cbeaeaa68023abd02bb8687925265f2f63
 - name: golang.org/x/crypto
-  version: 432090b8f568c018896cd8a0fb0345872bbac6ce
+  version: beaf6a35706e5032ae4c3fcf342c663c069f44d2
   subpackages:
   - ssh/terminal
 - name: golang.org/x/net
@@ -61,19 +62,19 @@ imports:
   - lex/httplex
   - trace
 - name: golang.org/x/sys
-  version: 37707fdb30a5b38865cfb95e5aab41707daec7fd
+  version: f6cff0780e542efa0c8e864dc8fa522808f6a598
   subpackages:
   - unix
   - windows
 - name: golang.org/x/text
-  version: 9e2b64d659da1afe07ce1c9c1dfefc09d188f21e
+  version: 27420a1a391f5504f73155051cd274311bf70883
   subpackages:
   - secure/bidirule
   - transform
   - unicode/bidi
   - unicode/norm
 - name: google.golang.org/genproto
-  version: 2b5a72b8730b0b16380010cfe5286c42108d88e7
+  version: 2d9486acae19cf9bd0c093d7dc236a323726a9e4
   subpackages:
   - googleapis/rpc/status
 - name: google.golang.org/grpc

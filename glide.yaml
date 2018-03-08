@@ -8,6 +8,10 @@ import:
 - package: google.golang.org/grpc
   version: ^1.9.2
 - package: github.com/lib/pq
+- package: github.com/golang/protobuf
+  version: ^1.0.0
+  subpackages:
+  - ptypes/empty
 testImport:
 - package: github.com/golang/mock
   version: ^1.0.0

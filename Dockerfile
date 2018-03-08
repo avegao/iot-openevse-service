@@ -1,4 +1,4 @@
-FROM golang:1.9.4-alpine AS build
+FROM golang:1.9.4-alpine3.7 AS build
 
 WORKDIR /go/src/github.com/avegao/iot-openevse-service
 
@@ -6,8 +6,7 @@ RUN apk add --no-cache --update \
     git \
     glide
 
-COPY glide.yaml glide.yaml
-COPY glide.lock glide.lock
+COPY ./glide.yaml ./glide.lock ./
 
 RUN glide install
 
